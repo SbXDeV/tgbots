@@ -29,19 +29,27 @@ def db_insert(id, username, first_name, last_name):
     try:
         connect = sqlite3.connect('sqlite_python.db')
         worker = connect.cursor()
-        worker.execute("""
-        INSERT INTO list_user(id, username, first_name, last_name) VALUES (?,?,?,?)
-        """, (id, username, first_name, last_name))
-        connect.commit()
-        connect.close()
+        project = worker.execute("""
+                    SELECT EXISTS(SELECT id FROM list_user WHERE id={}) AS user_id_alias;
+                    """.format(id))
+        if project.fetchone()[0] == 1:
+            print('Данные в базе данных уже имеются!')
+            pass
+        else:
+            worker.execute("""
+            INSERT INTO list_user(id, username, first_name, last_name) VALUES (?,?,?,?)
+            """, (id, username, first_name, last_name))
+            connect.commit()
+            connect.close()
     except Error as error:
         print('Ошибка внесения данных: {}'.format(error))
 
 
 def db_select():
     try:
-        get_absolute_path = 'D:/prod/tgbot/'
-        connect = sqlite3.connect(get_absolute_path + 'sqlite_python.db')
+        #get_absolute_path = '/root/code/tgbot/'
+        #connect = sqlite3.connect(get_absolute_path + 'sqlite_python.db')
+        connect = sqlite3.connect('sqlite_python.db')
         worker = connect.cursor()
         id_profile = worker.execute(''' SELECT id FROM list_user ''')
         rows = id_profile.fetchall()

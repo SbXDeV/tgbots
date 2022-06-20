@@ -8,7 +8,7 @@ from utils.db_api.database import db_insert
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
-    if message.from_user.id == 934718523:
+    if message.from_user.id == 1909188068:
         await message.answer('Добро пожаловать, это админ панель бота, функцоинал можно купить у @sbxdeveloper', reply_markup=admin)
     else:
 
